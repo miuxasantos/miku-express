@@ -1,0 +1,51 @@
+<!--Arquivo responsavel por armazenar o esqueleto do projeto-->
+<div class="container-fluid">
+  <p-toast />
+  <p-card header="Listagem de Clientes" class="mt-4">
+
+    <!--Inicio do container responsavel por alinhar os botoes-->
+    <div class="container-btn-novo">
+      <div class="row">
+        <div class="col-sm-12 col-md-5 col-lg-2 col-xl-2 mt-1">
+          <button [routerLink]="['/clientes/novo']" pButton severity="info" class="btn-novo btn-tamanho-maximo">
+            <i class="fa-solid fa-circle-plus" pButtonIcon></i>
+            <span pButtonLabel>Novo</span>
+          </button>
+        </div>
+        <div class="col-sm-12 col-md-7 col-lg-4 col-xl-3 mt-1">
+        <button  pButton class="btn-atualizar btn-tamanho-maximo"
+        (click)="listarClientes()">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span pButtonLabel>Atualizar</span>
+        </button>
+        </div>
+      </div>
+    </div>
+    <!--Fim do container responsavel por alinhar os botoes-->
+    <p-table [value]="clientes">
+      <ng-template #header>
+        <tr>
+          <th>Código</th>
+          <th>Nome</th>
+          <th>Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-cliente>
+        <tr>
+          <td>{{cliente.id}}</td>
+          <td>{{cliente.nome}}</td>
+          <td>
+            <button pButton icon="pi pi-pen-to-square" severity="info"
+            [routerLink]="['/clientes', cliente.id, 'editar']"
+             class="margin-btn-tabela"
+            pTooltip="Editar Cliente" tooltipPosition="left"></button>
+
+            <button class="margin-btn-tabela" pButton icon="pi pi-trash" severity="danger" pTooltip="Excluir Cliente"
+            tooltipPosition="right"
+            (click)="deletarCliente(cliente.id)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>

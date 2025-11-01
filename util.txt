@@ -1,0 +1,7 @@
+instalar angular na maquina
+npm install -g @angular/cli
+
+criar projeto. P.S remova os parentes
+ng new (nome do projeto)
+
+iniciar aplicação ng serve --o (flag --o utilizada para abrir no navegador a apicação ao executar)

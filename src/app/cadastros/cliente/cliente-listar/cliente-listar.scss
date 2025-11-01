@@ -1,0 +1,23 @@
+
+.container-btn-novo {
+  margin-top: 10px!important;
+}
+
+
+.btn-atualizar {
+  margin-left: 10px!important;
+background: #6d2391;
+background: linear-gradient(180deg,rgba(109, 35, 145, 1) 0%, rgba(150, 69, 191, 1) 50%, rgba(207, 136, 242, 1) 100%);
+border: 1px solid #6d2391;
+transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.btn-atualizar:hover {
+  background: transparent;
+  border: 1px solid #6d2391;
+  color: black;
+}
+
+
+
+

@@ -1,0 +1,24 @@
+@import "primeicons/primeicons.css";
+/* You can add global styles to this file, and also import other style files */
+*, html, body{
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.btn-tamanho-maximo {
+  width: 100%!important;
+}
+
+.input-tamanho-maximo {
+  width: 100%!important;
+}
+
+.margin-btn-tabela {
+  margin-left: 5px!important;
+}

@@ -1,0 +1,56 @@
+<p-toast />
+<div class="container">
+  <p-card header="Cadastrar Cliente" class="mt-4">
+    <form [formGroup]="formularioCliente">
+      <div class="row">
+        <div class="col-sm-12 col-md-8 col-lg-5 col-xl-4 mt-1">
+          <p-floatlabel variant="on">
+            <input class="w-100" formControlName="nome" pInputText id="nome" autocomplete="off" />
+            <label for="nome">Nome</label>
+          </p-floatlabel>
+        </div>
+        <div class="col-sm-12 col-md-4 mt-1">
+          <p-floatlabel variant="on">
+            <p-inputmask formControlName="cpfCnpj" styleClass="input-tamanho-maximo" mask="999.999.999-99"
+              unmasked="true" id="cpf" autocomplete="off" />
+            <label for="cpf">CPF</label>
+          </p-floatlabel>
+        </div>
+        <div class="col-xs-12 col-sm-12
+        col-md-6 col-lg-4 col-xl-3">
+          <p-floatlabel class="input-tamanho-maximo" variant="on">
+            <p-select [(ngModel)]="estado" [ngModelOptions]="{standalone:true}" inputId="estado" [options]="estados"
+              optionLabel="nome" class="w-full" />
+            <label for="estado">Estado</label>
+          </p-floatlabel>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6
+        col-lg-4 col-xl-3">
+          <p-floatlabel variant="on">
+            <p-autocomplete formControlName="cidade"
+            [suggestions]="cidades"
+            (completeMethod)="carregarCidadesPorEstado($event)"
+              inputId="cidade"
+              optionLabel="nome" />
+            <label for="cidade">Cidade</label>
+          </p-floatlabel>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-end align-items-center">
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-3 mt-4">
+          <button type="submit" pButton severity="success" class="btn-tamanho-maximo" (click)="salvarCliente()">
+            <i class="fa-solid fa-floppy-disk" pButtonIcon></i>
+            <span pButtonLabel>Salvar</span>
+          </button>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-4 col-xl-3 mt-4">
+          <button type="button" pButton severity="danger" class="btn-tamanho-maximo" routerLink="/clientes/listar">
+            <i class="fa-solid fa-circle-xmark" pButtonIcon></i>
+            <span pButtonLabel>Cancelar</span>
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </p-card>
+</div>
