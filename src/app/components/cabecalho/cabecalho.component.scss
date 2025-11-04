@@ -1,0 +1,36 @@
+:host {
+    font-family: "Fredoka", sans-serif !important;
+}
+
+.header__container {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+    background: #0075FF;
+    background: linear-gradient(90deg,rgba(0, 117, 255, 1) 0%, rgba(123, 204, 255, 1) 100%);
+    font-family: "Fredoka", sans-serif !important;
+}
+
+.container__title {
+    color: whitesmoke;
+}
+
+.title {
+
+}
+
+.container__links {
+    display: flex;
+    gap: 30px;
+}
+
+.link {
+    color: whitesmoke;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.container__login {
+}

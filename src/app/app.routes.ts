@@ -6,9 +6,9 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./dashboard/home/home.routes').then(m => m.HOME_ROUTES)
   },
-  {
-    path: 'clientes',
-    loadChildren: () =>
-      import('./cadastros/cliente/cliente.routes').then(m => m.CLIENTES_ROUTES)
-  },
+  // {
+  //   path: 'clientes',
+  //   loadChildren: () =>
+  //     import('./cadastros/cliente/cliente.routes').then(m => m.CLIENTES_ROUTES)
+  // },
 ];

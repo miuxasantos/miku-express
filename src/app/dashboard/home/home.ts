@@ -5,7 +5,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, ButtonModule, ToolbarModule],
+  imports: [RouterLink, ButtonModule],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
