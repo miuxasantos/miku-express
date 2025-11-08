@@ -1,0 +1,24 @@
+<p-toast></p-toast>
+
+<div class="rastreio-page">
+  <!-- Tela de Busca -->
+  <app-busca
+    *ngIf="!orderEncontrado"
+    (buscarPacote)="buscarOrder($event)"
+  ></app-busca>
+
+  <!-- Tela de Detalhes -->
+  <app-detalhes 
+    *ngIf="orderEncontrado"
+    [order]="orderSelecionado!"
+    (voltar)="voltarParaBusca()"
+  ></app-detalhes>
+
+  <!-- Loading Global -->
+  <div *ngIf="loading" class="loading-overlay">
+    <div class="loading-spinner">
+      <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+      <p>Buscando pacote...</p>
+    </div>
+  </div>
+</div>

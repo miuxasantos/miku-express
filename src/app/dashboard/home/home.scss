@@ -1,3 +1,95 @@
 .title__strong {
     color: #3692ff;
 }
+
+.main {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 40px 60px;
+    background-color: #f5f8ff;
+    font-family: 'Poppins', sans-serif;
+    color: #222;
+  }
+  
+  /* ==== COLUNA ESQUERDA ==== */
+  .conteudo-esquerda {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+  }
+  
+  .miku-principal {
+    height: 380px;
+  }
+  
+  .textos {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .card {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    width: 370px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border: 2px solid #cce4ff;
+  
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+  
+    p {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  
+    .title__strong {
+      color: #2580ff;
+    }
+  }
+  
+  /* ==== COLUNA DIREITA ==== */
+  .conteudo-direita {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+  }
+  
+  .rastreamento-card {
+    background: linear-gradient(180deg, #50bfff, #2580ff);
+    border-radius: 20px;
+    color: white;
+    width: 250px;
+    text-align: center;
+    padding: 25px 10px;
+  
+    h2 {
+      font-size: 18px;
+      margin: 0 0 10px 0;
+    }
+  }
+  
+  .botao-rastrear {
+    display: inline-block;
+    background: white;
+    border-radius: 25px;
+    padding: 8px 25px;
+    font-weight: 600;
+    color: #2580ff;
+    text-decoration: none;
+    transition: 0.2s;
+  
+    &:hover {
+      background: #e6f2ff;
+    }
+  }
+  
+  .miku-secundaria {
+    width: 120px;
+    border-radius: 100%;
+  }

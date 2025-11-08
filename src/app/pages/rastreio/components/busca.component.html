@@ -1,0 +1,26 @@
+<div class="busca-container">
+  <p-card header="Rastrear Pacote" class="busca-card">
+    <div class="busca-form">
+      <div class="field">
+        <label for="trackingCode" class="block">Código de Rastreio</label>
+        <input 
+          id="trackingCode"
+          type="text" 
+          pInputText 
+          [(ngModel)]="trackingCode"
+          placeholder="Digite o código de rastreio"
+          class="w-full"
+          (keyup.enter)="buscar()"
+        />
+      </div>
+
+      <p-button 
+        label="Buscar Pacote" 
+        icon="pi pi-search"
+        (onClick)="buscar()"
+        [loading]="loading"
+        class="w-full busca-button"
+      ></p-button>
+    </div>
+  </p-card>
+</div>

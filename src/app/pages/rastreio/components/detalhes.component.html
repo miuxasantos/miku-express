@@ -1,0 +1,77 @@
+<div class="detalhes-container">
+  <p-card header="Detalhes do Pacote" class="detalhes-card">
+    <div class="voltar-button">
+      <p-button 
+        label="Voltar" 
+        icon="pi pi-arrow-left"
+        (onClick)="voltar.emit()"
+        class="p-button-secondary"
+      ></p-button>
+    </div>
+
+    <!-- Informações do Pedido -->
+    <div *ngIf="order" class="order-info">
+      <div class="info-header">
+        <h2>Pacote: {{ order.trackingCode }}</h2>
+        <span [class]="'status status-' + (getCurrentStatus().toLowerCase() || 'pendente')">
+          {{ getStatusText(getCurrentStatus()) }}
+        </span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <strong>ID:</strong>
+          <span>#{{ order.id }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Origem:</strong>
+          <span>{{ order.source }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Destino:</strong>
+          <span>{{ order.destination }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Distância:</strong>
+          <span>{{ order.distance }} km</span>
+        </div>
+        <div class="info-item">
+          <strong>Preço:</strong>
+          <span class="price">{{ order.price | currency:'BRL' }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Peso:</strong>
+          <span>{{ order.weightInKg }} kg</span>
+        </div>
+        <div class="info-item">
+          <strong>Data de Criação:</strong>
+          <span>{{ formatDate(order.dateCreate) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline de Atualizações -->
+    <div *ngIf="order.statusUpdates.length" class="timeline-section">
+      <h3>Histórico de Atualizações</h3>
+      <p-timeline [value]="sortedStatusUpdates">
+        <ng-template pTemplate="content" let-update>
+          <p-card 
+            [header]="getStatusText(update.status)" 
+            [subheader]="update.source + ' → ' + update.destination"
+            class="timeline-card"
+          >
+            <p class="update-description">{{ getStatusDescription(update.status) }}</p>
+            <small class="update-location">
+              📍 De: {{ update.source }} → Para: {{ update.destination }}
+            </small>
+          </p-card>
+        </ng-template>
+      </p-timeline>
+    </div>
+
+    <!-- Mensagem se não houver atualizações -->
+    <div *ngIf="order && (!order.statusUpdates || order.statusUpdates.length === 0)" class="no-updates">
+      <p>Nenhuma atualização de status disponível.</p>
+    </div>
+  </p-card>
+</div>

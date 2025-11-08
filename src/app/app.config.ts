@@ -5,8 +5,9 @@ import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import Lara from '@primeuix/themes/lara';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+import { AuthInterceptor } from './core/auth/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
     //INICIO IMPORTAÇÕES MANUAIS
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([AuthInterceptor])),
     MessageService,// HABILITANDO CHAMADAS HTTP
     providePrimeNG({
       theme: {

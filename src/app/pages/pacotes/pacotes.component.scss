@@ -1,0 +1,37 @@
+.page-container {
+      padding: 2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+    }
+    
+    .cards-container-wrapper {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.5rem;
+      padding: 1rem;
+    }
+    
+    /* Customizando o scroll do PrimeNG */
+    :host ::ng-deep .custom-scrollpanel .p-scrollpanel-wrapper {
+      border-radius: 10px;
+    }
+    
+    :host ::ng-deep .custom-scrollpanel .p-scrollpanel-bar {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 5px;
+    }

@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-cabecalho',
-  imports: [],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './cabecalho.component.html',
   styleUrl: './cabecalho.component.scss'
 })

@@ -9,31 +9,40 @@ export const routes: Routes = [
   {
     path: 'rastreio',
     loadChildren: () =>
-      import('./rastreio/rastreio.component.routes').then(m => m.RASTREIO_ROUTES)
+      import('./pages/rastreio/rastreio.component.routes').then(m => m.RASTREIO_ROUTES)
   },
   {
     path: 'meuspacotes',
     loadChildren: () =>
-      import('./pacotes/pacotes.routes').then(m => m.MEUS_PACOTES_ROUTES)
+      import('./pages/pacotes/pacotes.component.routes').then(m => m.MEUS_PACOTES_ROUTES)
   },
   {
     path: 'contato',
     loadChildren: () =>
-      import('./contato/contato.routes').then(m => m.CONTATO_ROUTES)
+      import('./pages/contato/contato.component.routes').then(m => m.CONTATO_ROUTES)
   },
   {
     path: 'signin',
     loadChildren: () =>
-      import('./login/signin/signin.routes').then(m => m.SIGNIN_ROUTES)
+      import('./pages/signin/signin.component.routes').then(m => m.SIGNIN_ROUTES)
   },
   {
     path: 'signup',
     loadChildren: () =>
-      import('./login/signup/signup.routes').then(m => m.SIGNUP_ROUTES)
+      import('./pages/signup/signup.component.routes').then(m => m.SIGNUP_ROUTES)
   },
   {
     path: 'adm',
     loadChildren: () =>
-      import('./admin/adm.routes').then(m => m.ADM_ROUTES)
+      import('./pages/admin/adm.component.routes').then(m => m.ADM_ROUTES)
+  },
+  {
+    path: 'notfound',
+    loadChildren: () =>
+      import('./pages/notfound/notfound.component.routes').then(m => m.NOTFOUND_ROUTES)
+  },
+  {
+    path: '**',
+    redirectTo: ''
   }
 ];
