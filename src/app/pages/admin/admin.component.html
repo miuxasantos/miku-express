@@ -558,6 +558,7 @@
           id="source"
           type="text"
           pInputText
+          appCepMask
           formControlName="source"
           placeholder="Local de origem"
         />
@@ -572,6 +573,7 @@
           id="destination"
           type="text"
           pInputText
+          appCepMask
           formControlName="destination"
           placeholder="Local de destino (opcional)"
         />
@@ -636,13 +638,14 @@
 
       <div class="form-field">
         <label for="sourcePackage">Origem *</label>
-        <textarea
+        <input
           id="sourcePackage"
-          pInputTextarea
+          pInputText
+          appCepMask
           formControlName="source"
           placeholder="Endereço de coleta"
           rows="2"
-        ></textarea>
+        />
         <small class="error" *ngIf="packageForm.controls['source'].invalid && packageForm.controls['source'].touched">
           Informe o endereço de origem completo.
         </small>
@@ -650,13 +653,14 @@
 
       <div class="form-field">
         <label for="destinationPackage">Destino *</label>
-        <textarea
+        <input
           id="destinationPackage"
-          pInputTextarea
+          pInputText
+          appCepMask
           formControlName="destination"
           placeholder="Endereço de entrega"
           rows="2"
-        ></textarea>
+        />
         <small class="error" *ngIf="packageForm.controls['destination'].invalid && packageForm.controls['destination'].touched">
           Informe o endereço de destino completo.
         </small>

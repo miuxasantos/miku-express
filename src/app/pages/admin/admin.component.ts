@@ -14,6 +14,7 @@ import { DividerModule } from 'primeng/divider';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { CepMaskDirective } from '../../core/mask/cepMask.directive';
 
 interface DashboardStat {
   label: string;
@@ -44,7 +45,8 @@ interface DashboardStat {
     CardModule,
     DividerModule,
     ToastModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    CepMaskDirective
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin.component.html',
