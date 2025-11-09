@@ -19,12 +19,13 @@ export interface UpdateClient {
 
 export interface Client {
     id: number;
-    nome: string;
+    name: string;
     email: string;
-    telefone?: string;
+    phoneNumber?: string;
     cpf?: string;
-    dataNascimento?: string;
-    genero?: string;
+    dateOfBirth?: string;
+    gender?: string;
+    role?: string;
 }
 
 export interface StatusUpdate {
@@ -39,7 +40,7 @@ export interface Order {
     source: string;
     destination: string;
     distance: number;
-    price: number;
+    price: number | string;
     weightInKg: number;
     dateCreate: string;
     statusUpdates: StatusUpdate[];

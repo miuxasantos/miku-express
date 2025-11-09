@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { BuscaComponent } from './components/busca.component';
 import { DetalhesComponent } from './components/detalhes.component';
 import { PublicService } from '../../services/public.service';
@@ -36,8 +37,10 @@ export class RastreioComponent {
   buscarOrder(trackingCode: string) {
     this.loading = true;
 
+    const sanitizedCode = trackingCode.trim().toUpperCase();
+
     // Primeiro tenta buscar via PublicService (sem autenticação)
-    this.publicService.getOrderByTrackingCode(trackingCode).subscribe({
+    this.publicService.getOrderByTrackingCode(sanitizedCode).subscribe({
       next: (order: Order) => {
         this.orderSelecionado = order;
         this.orderEncontrado = true;
@@ -49,14 +52,29 @@ export class RastreioComponent {
           detail: 'Detalhes do pacote carregados com sucesso'
         });
       },
-      error: (publicError) => {
-        // Se falhar no PublicService, tenta buscar via ClientService (com autenticação)
-        this.tentarBuscarComAutenticacao(trackingCode, publicError);
+      error: (publicError: HttpErrorResponse) => {
+        if (this.deveTentarAutenticado(publicError)) {
+          this.tentarBuscarComAutenticacao(sanitizedCode);
+          return;
+        }
+
+        this.loading = false;
+        this.exibirErroBusca(publicError);
       }
     });
   }
 
-  private tentarBuscarComAutenticacao(trackingCode: string, publicError: any) {
+  private tentarBuscarComAutenticacao(trackingCode: string) {
+    if (!this.isAutenticado()) {
+      this.loading = false;
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Pacote Não Encontrado',
+        detail: 'Não foi possível encontrar o pacote com o código informado'
+      });
+      return;
+    }
+
     // Primeiro busca a lista de orders para encontrar o ID pelo trackingCode
     this.clientService.getOrders().subscribe({
       next: (orders: Order[]) => {
@@ -79,11 +97,7 @@ export class RastreioComponent {
       },
       error: (clientError) => {
         this.loading = false;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro na Busca',
-          detail: clientError.error?.message || 'Não foi possível buscar os pacotes'
-        });
+        this.exibirErroBusca(clientError);
       }
     });
   }
@@ -116,5 +130,36 @@ export class RastreioComponent {
   voltarParaBusca() {
     this.orderEncontrado = false;
     this.orderSelecionado = undefined;
+  }
+
+  private isAutenticado(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  private deveTentarAutenticado(error: HttpErrorResponse): boolean {
+    return this.isAutenticado() && [401, 403].includes(error.status);
+  }
+
+  private exibirErroBusca(error: HttpErrorResponse) {
+    const status = error.status;
+    let summary = 'Erro na Busca';
+    let detail = error.error?.message;
+
+    if (status === 404) {
+      summary = 'Pacote Não Encontrado';
+      detail = 'Não encontramos nenhum pacote com o código informado.';
+    } else if (status === 0) {
+      detail = 'Não foi possível conectar ao servidor. Verifique sua conexão.';
+    }
+
+    if (!detail) {
+      detail = 'Não foi possível buscar o pacote.';
+    }
+
+    this.messageService.add({
+      severity: 'error',
+      summary,
+      detail
+    });
   }
 }

@@ -16,6 +16,11 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./pages/pacotes/pacotes.component.routes').then(m => m.MEUS_PACOTES_ROUTES)
   },
+  // {
+  //   path: 'minha-conta',
+  //   loadChildren: () =>
+  //     import('./pages/account/account.component.routes').then(m => m.ACCOUNT_ROUTES)
+  // },
   {
     path: 'contato',
     loadChildren: () =>

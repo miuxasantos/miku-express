@@ -26,6 +26,7 @@ export class PublicService {
     constructor(private apiService: ApiService) {}
 
     getOrderByTrackingCode(trackingCode: string): Observable<Order> {
-        return this.apiService.get<Order>(`/orders/tracking?code=${encodeURIComponent(trackingCode)}`);
+        // const sanitizedCode = trackingCode.trim().toUpperCase();
+        return this.apiService.get<Order>(`/publics/orders/tracking?code=${encodeURIComponent(trackingCode)}`);
     }
 }

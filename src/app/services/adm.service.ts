@@ -29,23 +29,11 @@ export interface Adm {
 }
 
 export interface StatusUpdate {
-    status?: string;
-    source?: string;
-    destination?: string;
-}
-
-export interface CreatedPackage {
-    id: number;
-    trackingCode: string;
+    id?: number;
+    status: string;
     source: string;
-    destination: string;
-    distance: number;
-    price: number;
-    customerEmail: string;
-    customerName: string;
-    weightInKg: number;
-    dateCreate: string;
-    statusUpdates: StatusUpdate[];
+    destination?: string;
+    dateUpdate?: string;
 }
 
 export interface Order {
@@ -53,51 +41,111 @@ export interface Order {
     trackingCode: string;
     source: string;
     destination: string;
-    distance: number;
-    price: number;
+    distance: string;
+    price: number | string;
+    customerEmail: string;
+    customerName: string;
     weightInKg: number;
     dateCreate: string;
     statusUpdates: StatusUpdate[];
 }
 
+export interface CreatePackage {
+    source: string;
+    destination: string;
+    customerEmail: string;
+    customerName: string;
+    weightInKg: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AdmService {
+    private readonly basePath = '/admins';
+
     constructor(private apiService: ApiService) {}
 
+    /**
+     * Registra um novo administrador através do endpoint público de cadastro.
+     */
     register(dto: CreateAdm): Observable<Adm> {
-        return this.apiService.post<Adm>('/register', dto);
+        return this.apiService.post<Adm>(`${this.basePath}/register`, dto);
     }
 
+    /**
+     * Recupera os dados do administrador autenticado (perfil da sessão atual).
+     */
     getAcc(): Observable<Adm> {
-        return this.apiService.get<Adm>('/account');
+        return this.apiService.get<Adm>(`${this.basePath}/account`);
     }
 
+    /**
+     * Obtém a lista completa de administradores cadastrados.
+     */
+    getAllAdmins(): Observable<Adm[]> {
+        return this.apiService.get<Adm[]>(`${this.basePath}/users`);
+    }
+
+    /**
+     * Atualiza parcialmente os dados do administrador autenticado.
+     */
     updateAcc(dto: UpdateAdm): Observable<Adm> {
-        return this.apiService.patch<Adm>('/account', dto);
+        return this.apiService.patch<Adm>(`${this.basePath}/account`, dto);
     }
 
+    /**
+     * Atualiza parcialmente os dados de outro administrador a partir do ID.
+     */
+    updateAdminById(adminId: number, dto: UpdateAdm): Observable<Adm> {
+        return this.apiService.patch<Adm>(`${this.basePath}/users/${adminId}`, dto);
+    }
+
+    /**
+     * Remove definitivamente a conta do administrador autenticado.
+     */
     deleteAcc(): Observable<void> {
-        return this.apiService.delete<void>('/account');
+        return this.apiService.delete<void>(`${this.basePath}/account`);
     }
 
+    /**
+     * Exclui um administrador específico pelo ID.
+     */
+    deleteAdminById(adminId: number): Observable<void> {
+        return this.apiService.delete<void>(`${this.basePath}/users/${adminId}`);
+    }
+
+    /**
+     * Retorna todos os pedidos disponíveis para administração.
+     */
     getAllOrders(): Observable<Order[]> {
-        return this.apiService.get<Order[]>('/orders');
+        return this.apiService.get<Order[]>(`${this.basePath}/orders`);
     }
 
+    /**
+     * Busca um pedido específico pelo ID.
+     */
     getOrderById(orderId: number): Observable<Order> {
-        return this.apiService.get<Order>(`/orders/${orderId}`);
+        return this.apiService.get<Order>(`${this.basePath}/orders/${orderId}`);
     }
 
-    createPackage(dto: CreatedPackage): Observable<CreatedPackage> {
-        return this.apiService.post<CreatedPackage>('/orders', dto);
+    /**
+     * Registra um novo pedido/pacote no sistema.
+     */
+    createPackage(dto: CreatePackage): Observable<Order> {
+        return this.apiService.post<Order>(`${this.basePath}/orders`, dto);
     }
 
-    updateOrderStatus(orderId: number, dto: StatusUpdate): Observable<Order> {
-        return this.apiService.patch<Order>(`/orders/${orderId}/status`, dto);
+    /**
+     * Adiciona uma atualização de status ao pedido informado.
+     */
+    updateOrderStatus(orderId: number, dto: Pick<StatusUpdate, 'status' | 'source' | 'destination'>): Observable<StatusUpdate> {
+        return this.apiService.patch<StatusUpdate>(`${this.basePath}/orders/${orderId}/status`, dto);
     }
     
+    /**
+     * Remove um pedido e todo o histórico associado.
+     */
     deleteOrder(orderId: number): Observable<void> {
-        return this.apiService.delete<void>(`/orders/${orderId}`);
+        return this.apiService.delete<void>(`${this.basePath}/orders/${orderId}`);
     }
 
 }

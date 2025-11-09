@@ -12,8 +12,15 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
   // }
 
   if (token) {
-    const decoded: any = jwtDecode(token);
-    console.log('Usuário logado com ID:', decoded.id); // ou "decoded.id" dependendo do token
+    const decoded: Record<string, unknown> = jwtDecode(token);
+    const userId =
+      decoded['id'] ??
+      decoded['userId'] ??
+      decoded['user_id'] ??
+      decoded['sub'] ??
+      null;
+
+    console.log('Usuário logado com ID:', userId ?? '(não informado no token)');
     req = req.clone({
       setHeaders: { Authorization: `Bearer ${token}` }
     });

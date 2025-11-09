@@ -1,1 +1,699 @@
-<p>admin works!</p>
+<div class="admin-page">
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <section class="page-header">
+    <div>
+      <h1>Painel administrativo</h1>
+      <p>Monitore pedidos, atualize status e acompanhe a operação da Miku Express.</p>
+    </div>
+
+    <div class="page-header__actions">
+      <button
+        type="button"
+        pButton
+        label="Novo pedido"
+        icon="pi pi-plus"
+        (click)="openCreateDialog()"
+      ></button>
+      <button
+        type="button"
+        pButton
+        label="Atualizar"
+        icon="pi pi-refresh"
+        class="p-button-outlined"
+        [loading]="loading"
+        (click)="refresh()"
+      ></button>
+    </div>
+  </section>
+
+  <section class="stats" *ngIf="stats.length">
+    <p-card
+      *ngFor="let stat of stats"
+      class="stat-card"
+      [ngClass]="'stat-' + stat.severity"
+    >
+      <div class="stat-card__icon">
+        <i class="pi" [ngClass]="stat.icon"></i>
+      </div>
+      <div class="stat-card__content">
+        <span class="stat-card__label">{{ stat.label }}</span>
+        <h2 class="stat-card__value">{{ stat.value }}</h2>
+        <p class="stat-card__description">{{ stat.description }}</p>
+      </div>
+    </p-card>
+  </section>
+
+  <section class="orders-section">
+    <div class="orders-toolbar">
+      <div class="search-box p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input
+          type="text"
+          pInputText
+          placeholder="Buscar por código, cliente, e-mail ou rota"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="applyFilter()"
+        />
+      </div>
+      <span class="orders-count">
+        {{ filteredOrders.length }} pedido(s) encontrado(s)
+      </span>
+    </div>
+
+    <p-table
+      [value]="filteredOrders"
+      [loading]="loading"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [responsiveLayout]="'scroll'"
+      [rowTrackBy]="trackByOrderId"
+      class="orders-table"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Código</th>
+          <th>Cliente</th>
+          <th>Origem • Destino</th>
+          <th>Peso</th>
+          <th>Preço</th>
+          <th>Status</th>
+          <th class="actions-column">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-order>
+        <tr>
+          <td>
+            <div class="code-cell">
+              <button
+                type="button"
+                pButton
+                icon="pi pi-eye"
+                class="p-button-text p-button-rounded p-button-sm"
+                (click)="openOrderDetails(order)"
+                aria-label="Ver detalhes do pedido"
+              ></button>
+              <span class="code">{{ order.trackingCode }}</span>
+            </div>
+            <small class="muted">Criado em {{ order.dateCreate | date:'dd/MM/yyyy HH:mm' }}</small>
+          </td>
+          <td>
+            <strong>{{ order.customerName }}</strong>
+            <small class="muted">{{ order.customerEmail }}</small>
+          </td>
+          <td>
+            <div class="route">
+              <span>{{ order.source }}</span>
+              <i class="pi pi-arrow-right"></i>
+              <span>{{ order.destination }}</span>
+            </div>
+            <small class="muted">Distância: {{ formatDistance(order.distance) }}</small>
+          </td>
+          <td>{{ order.weightInKg | number:'1.1-1' }} kg</td>
+          <td>{{ formatPriceValue(order.price) }}</td>
+          <td>
+            <p-tag
+              [value]="getLastStatus(order)?.status || 'Sem atualizações'"
+              [severity]="getStatusSeverity(getLastStatus(order)?.status)"
+            ></p-tag>
+            <small
+              class="muted"
+              *ngIf="getLastStatus(order)?.dateUpdate"
+            >
+              Atualizado em {{ getLastStatus(order)?.dateUpdate | date:'dd/MM/yyyy HH:mm' }}
+            </small>
+          </td>
+          <td class="actions-column">
+            <button
+              type="button"
+              pButton
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-text"
+              (click)="openStatusDialog(order)"
+              aria-label="Atualizar status"
+            ></button>
+            <button
+              type="button"
+              pButton
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-text p-button-danger"
+              (click)="confirmDelete(order, $event)"
+              aria-label="Excluir pedido"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">
+            <div class="empty-state">
+              <p>Nenhum pedido encontrado com o filtro aplicado.</p>
+              <button
+                type="button"
+                pButton
+                label="Limpar filtros"
+                class="p-button-text"
+                (click)="searchTerm=''; applyFilter()"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+
+  <p-divider></p-divider>
+
+  <section class="admins-section">
+    <div class="section-header">
+      <div>
+        <h2>Gestão de administradores</h2>
+        <p>Crie novos administradores, atualize informações e gerencie acessos.</p>
+      </div>
+      <button
+        type="button"
+        pButton
+        label="Novo administrador"
+        icon="pi pi-user-plus"
+        (click)="openCreateAdminDialog()"
+      ></button>
+    </div>
+
+    <div class="admins-toolbar">
+      <div class="search-box p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input
+          type="text"
+          pInputText
+          placeholder="Buscar por nome, e-mail, telefone ou CNPJ"
+          [(ngModel)]="adminSearchTerm"
+          (ngModelChange)="applyAdminFilter()"
+        />
+      </div>
+      <span class="admins-count">
+        {{ filteredAdmins.length }} administrador(es) encontrado(s)
+      </span>
+    </div>
+
+    <p-table
+      [value]="filteredAdmins"
+      [loading]="adminsLoading"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [responsiveLayout]="'scroll'"
+      class="admins-table"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Organização</th>
+          <th>CNPJ</th>
+          <th class="actions-column">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-admin>
+        <tr>
+          <td>
+            <strong>{{ admin.name }}</strong>
+          </td>
+          <td>
+            <span>{{ admin.email }}</span>
+          </td>
+          <td>
+            <span>{{ admin.phoneNumber || '—' }}</span>
+          </td>
+          <td>
+            <span>{{ admin.organizationName || '—' }}</span>
+          </td>
+          <td>
+            <span>{{ admin.cnpj }}</span>
+          </td>
+          <td class="actions-column">
+            <button
+              type="button"
+              pButton
+              icon="pi pi-pencil"
+              class="p-button-rounded p-button-text"
+              (click)="openUpdateAdminDialog(admin)"
+              aria-label="Editar administrador"
+            ></button>
+            <button
+              type="button"
+              pButton
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-text p-button-danger"
+              (click)="confirmDeleteAdmin(admin, $event)"
+              aria-label="Excluir administrador"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6">
+            <div class="empty-state">
+              <p>Nenhum administrador encontrado.</p>
+              <button
+                type="button"
+                pButton
+                label="Limpar filtros"
+                class="p-button-text"
+                (click)="adminSearchTerm=''; applyAdminFilter()"
+              ></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </section>
+
+  <p-dialog
+    header="Detalhes do pedido"
+    [(visible)]="orderDialogVisible"
+    [modal]="true"
+    [style]="{ width: '640px' }"
+    [breakpoints]="{ '768px': '90vw' }"
+    (onHide)="closeOrderDetails()"
+  >
+    <ng-container *ngIf="selectedOrder as detail">
+      <div class="detail-header">
+        <h2>{{ detail.trackingCode }}</h2>
+        <p>
+          Cadastrado em
+          <strong>{{ detail.dateCreate | date:'dd/MM/yyyy HH:mm' }}</strong>
+        </p>
+      </div>
+
+      <div class="detail-grid">
+        <div>
+          <span class="label">Cliente</span>
+          <p>{{ detail.customerName }}</p>
+          <small class="muted">{{ detail.customerEmail }}</small>
+        </div>
+        <div>
+          <span class="label">Origem</span>
+          <p>{{ detail.source }}</p>
+        </div>
+        <div>
+          <span class="label">Destino</span>
+          <p>{{ detail.destination }}</p>
+        </div>
+        <div>
+          <span class="label">Peso</span>
+          <p>{{ detail.weightInKg | number:'1.1-1' }} kg</p>
+        </div>
+        <div>
+          <span class="label">Distância</span>
+          <p>{{ formatDistance(detail.distance) }}</p>
+        </div>
+        <div>
+          <span class="label">Preço</span>
+          <p>{{ formatPriceValue(detail.price) }}</p>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      <div class="status-timeline" *ngIf="detail.statusUpdates?.length; else noStatus">
+        <h3>Histórico de status</h3>
+        <div class="status-item" *ngFor="let update of detail.statusUpdates">
+          <div class="status-item__header">
+            <p-tag
+              [value]="update.status"
+              [severity]="getStatusSeverity(update.status)"
+            ></p-tag>
+            <span class="muted">
+              {{ update.dateUpdate | date:'dd/MM/yyyy HH:mm' }}
+            </span>
+          </div>
+          <div class="status-item__content">
+            <p>
+              <strong>Origem:</strong> {{ update.source }}
+            </p>
+            <p>
+              <strong>Destino:</strong> {{ update.destination || '—' }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noStatus>
+        <p class="muted">Nenhum status cadastrado ainda para este pedido.</p>
+      </ng-template>
+    </ng-container>
+  </p-dialog>
+
+  <p-dialog
+    header="Editar administrador"
+    [(visible)]="adminDialogVisible"
+    [modal]="true"
+    [style]="{ width: '520px' }"
+    [breakpoints]="{ '768px': '95vw' }"
+    (onHide)="selectedAdmin = undefined"
+  >
+    <form [formGroup]="adminForm" class="dialog-form" (ngSubmit)="submitAdminUpdate()">
+      <div class="form-row">
+        <div class="form-field">
+          <label>ID</label>
+          <input type="text" pInputText formControlName="id" readonly />
+        </div>
+        <div class="form-field">
+          <label>E-mail</label>
+          <input type="email" pInputText formControlName="email" readonly />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>Nome *</label>
+        <input type="text" pInputText formControlName="name" placeholder="Nome completo" />
+        <small class="error" *ngIf="adminForm.controls['name'].invalid && adminForm.controls['name'].touched">
+          Informe um nome válido (mínimo 3 caracteres).
+        </small>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label>Telefone</label>
+          <input type="text" pInputText formControlName="phoneNumber" placeholder="Telefone de contato" />
+        </div>
+        <div class="form-field">
+          <label>Organização *</label>
+          <input type="text" pInputText formControlName="organizationName" placeholder="Nome da organização" />
+          <small class="error" *ngIf="adminForm.controls['organizationName'].invalid && adminForm.controls['organizationName'].touched">
+            Informe o nome da organização (mínimo 3 caracteres).
+          </small>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>CNPJ</label>
+        <input type="text" pInputText formControlName="cnpj" readonly />
+      </div>
+
+      <div class="dialog-actions">
+        <button
+          type="button"
+          pButton
+          label="Cancelar"
+          class="p-button-text"
+          (click)="adminDialogVisible = false"
+        ></button>
+        <button
+          type="submit"
+          pButton
+          label="Salvar alterações"
+          icon="pi pi-check"
+          [loading]="adminSaving"
+        ></button>
+      </div>
+    </form>
+  </p-dialog>
+
+  <p-dialog
+    header="Novo administrador"
+    [(visible)]="createAdminDialogVisible"
+    [modal]="true"
+    [style]="{ width: '560px' }"
+    [breakpoints]="{ '768px': '95vw' }"
+    (onHide)="createAdminForm.reset()"
+  >
+    <form [formGroup]="createAdminForm" class="dialog-form" (ngSubmit)="submitRegisterAdmin()">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="admin-name">Nome *</label>
+          <input
+            id="admin-name"
+            type="text"
+            pInputText
+            formControlName="name"
+            placeholder="Nome completo"
+          />
+          <small class="error" *ngIf="createAdminForm.controls['name'].invalid && createAdminForm.controls['name'].touched">
+            Informe o nome do administrador.
+          </small>
+        </div>
+        <div class="form-field">
+          <label for="admin-email">E-mail corporativo *</label>
+          <input
+            id="admin-email"
+            type="email"
+            pInputText
+            formControlName="email"
+            placeholder="admin@mikuexpress.com"
+          />
+          <small class="error" *ngIf="createAdminForm.controls['email'].invalid && createAdminForm.controls['email'].touched">
+            Informe um e-mail válido.
+          </small>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="admin-password">Senha provisória *</label>
+        <input
+          id="admin-password"
+          type="password"
+          pInputText
+          formControlName="password"
+          placeholder="Mínimo de 6 caracteres"
+        />
+        <small class="error" *ngIf="createAdminForm.controls['password'].invalid && createAdminForm.controls['password'].touched">
+          Informe uma senha com pelo menos 6 caracteres.
+        </small>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="admin-phone">Telefone *</label>
+          <input
+            id="admin-phone"
+            type="text"
+            pInputText
+            formControlName="phoneNumber"
+            placeholder="11999999999"
+          />
+          <small class="error" *ngIf="createAdminForm.controls['phoneNumber'].invalid && createAdminForm.controls['phoneNumber'].touched">
+            Informe o telefone de contato (mínimo 8 dígitos).
+          </small>
+        </div>
+
+        <div class="form-field">
+          <label for="admin-cnpj">CNPJ *</label>
+          <input
+            id="admin-cnpj"
+            type="text"
+            pInputText
+            formControlName="cnpj"
+            placeholder="00.000.000/0000-00"
+          />
+          <small class="error" *ngIf="createAdminForm.controls['cnpj'].invalid && createAdminForm.controls['cnpj'].touched">
+            Informe o CNPJ completo.
+          </small>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="admin-organization">Organização *</label>
+        <input
+          id="admin-organization"
+          type="text"
+          pInputText
+          formControlName="organizationName"
+          placeholder="Nome da organização"
+        />
+        <small class="error" *ngIf="createAdminForm.controls['organizationName'].invalid && createAdminForm.controls['organizationName'].touched">
+          Informe o nome da organização (mínimo 3 caracteres).
+        </small>
+      </div>
+
+      <div class="dialog-actions">
+        <button
+          type="button"
+          pButton
+          label="Cancelar"
+          class="p-button-text"
+          (click)="createAdminDialogVisible = false"
+        ></button>
+        <button
+          type="submit"
+          pButton
+          label="Criar administrador"
+          icon="pi pi-save"
+          [loading]="creatingAdminUser"
+        ></button>
+      </div>
+    </form>
+  </p-dialog>
+
+  <p-dialog
+    header="Atualizar status"
+    [(visible)]="statusDialogVisible"
+    [modal]="true"
+    [style]="{ width: '520px' }"
+    [breakpoints]="{ '768px': '95vw' }"
+    (onHide)="statusForm.reset(); selectedOrder = undefined"
+  >
+    <form [formGroup]="statusForm" class="dialog-form" (ngSubmit)="submitStatus()">
+      <div class="form-field">
+        <label for="status">Status *</label>
+        <input
+          id="status"
+          type="text"
+          pInputText
+          formControlName="status"
+          placeholder="Ex.: Saiu para entrega"
+        />
+        <small class="error" *ngIf="statusForm.controls['status'].invalid && (statusForm.controls['status'].dirty || statusForm.controls['status'].touched)">
+          Informe um status com pelo menos 3 caracteres.
+        </small>
+      </div>
+
+      <div class="form-field">
+        <label for="source">Origem *</label>
+        <input
+          id="source"
+          type="text"
+          pInputText
+          formControlName="source"
+          placeholder="Local de origem"
+        />
+        <small class="error" *ngIf="statusForm.controls['source'].invalid && (statusForm.controls['source'].dirty || statusForm.controls['source'].touched)">
+          Informe a origem deste status.
+        </small>
+      </div>
+
+      <div class="form-field">
+        <label for="destination">Destino</label>
+        <input
+          id="destination"
+          type="text"
+          pInputText
+          formControlName="destination"
+          placeholder="Local de destino (opcional)"
+        />
+      </div>
+
+      <div class="dialog-actions">
+        <button
+          type="button"
+          pButton
+          label="Cancelar"
+          class="p-button-text"
+          (click)="statusDialogVisible = false"
+        ></button>
+        <button
+          type="submit"
+          pButton
+          label="Salvar status"
+          icon="pi pi-check"
+          [loading]="savingStatus"
+        ></button>
+      </div>
+    </form>
+  </p-dialog>
+
+  <p-dialog
+    header="Novo pedido"
+    [(visible)]="createDialogVisible"
+    [modal]="true"
+    [style]="{ width: '560px' }"
+    [breakpoints]="{ '768px': '95vw' }"
+    (onHide)="packageForm.reset()"
+  >
+    <form [formGroup]="packageForm" class="dialog-form" (ngSubmit)="submitPackage()">
+      <div class="form-row">
+        <div class="form-field">
+          <label for="customerName">Nome do cliente *</label>
+          <input
+            id="customerName"
+            type="text"
+            pInputText
+            formControlName="customerName"
+            placeholder="Nome completo do cliente"
+          />
+          <small class="error" *ngIf="packageForm.controls['customerName'].invalid && packageForm.controls['customerName'].touched">
+            Informe o nome do cliente.
+          </small>
+        </div>
+        <div class="form-field">
+          <label for="customerEmail">E-mail *</label>
+          <input
+            id="customerEmail"
+            type="email"
+            pInputText
+            formControlName="customerEmail"
+            placeholder="cliente@mikuexpress.com"
+          />
+          <small class="error" *ngIf="packageForm.controls['customerEmail'].invalid && packageForm.controls['customerEmail'].touched">
+            Informe um e-mail válido.
+          </small>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="sourcePackage">Origem *</label>
+        <textarea
+          id="sourcePackage"
+          pInputTextarea
+          formControlName="source"
+          placeholder="Endereço de coleta"
+          rows="2"
+        ></textarea>
+        <small class="error" *ngIf="packageForm.controls['source'].invalid && packageForm.controls['source'].touched">
+          Informe o endereço de origem completo.
+        </small>
+      </div>
+
+      <div class="form-field">
+        <label for="destinationPackage">Destino *</label>
+        <textarea
+          id="destinationPackage"
+          pInputTextarea
+          formControlName="destination"
+          placeholder="Endereço de entrega"
+          rows="2"
+        ></textarea>
+        <small class="error" *ngIf="packageForm.controls['destination'].invalid && packageForm.controls['destination'].touched">
+          Informe o endereço de destino completo.
+        </small>
+      </div>
+
+      <div class="form-field">
+        <label for="weight">Peso em kg *</label>
+        <input
+          id="weight"
+          type="number"
+          step="0.1"
+          min="0.1"
+          pInputText
+          formControlName="weightInKg"
+          placeholder="0.0"
+        />
+        <small class="error" *ngIf="packageForm.controls['weightInKg'].invalid && packageForm.controls['weightInKg'].touched">
+          Informe o peso (mínimo de 0,1 kg).
+        </small>
+      </div>
+
+      <div class="dialog-actions">
+        <button
+          type="button"
+          pButton
+          label="Cancelar"
+          class="p-button-text"
+          (click)="createDialogVisible = false"
+        ></button>
+        <button
+          type="submit"
+          pButton
+          label="Criar pedido"
+          icon="pi pi-save"
+          [loading]="creatingPackage"
+        ></button>
+      </div>
+    </form>
+  </p-dialog>
+</div>

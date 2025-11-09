@@ -5,6 +5,10 @@ import { ButtonModule } from 'primeng/button';
 import { Order, StatusUpdate } from '../../models/client';
 import { Router } from '@angular/router';
 
+/**
+ * Cartão resumido para exibição de pedidos em "Meus Pacotes".
+ * Mostra informações principais e direciona para o rastreio detalhado.
+ */
 @Component({
   selector: 'app-cards',
   imports: [CardModule, ButtonModule, CommonModule],
@@ -19,9 +23,13 @@ import { Router } from '@angular/router';
        
       </ng-template>
       
-      <p class="descricao">{{ pacote.source }}</p>
-      <p class="preco">{{ pacote.destination | currency:'BRL' }}</p>
-      <p class="preco">{{ pacote.price | currency:'BRL' }}</p>
+      <p class="descricao">
+        <strong>Origem:</strong> {{ pacote.source }}
+      </p>
+      <p class="descricao">
+        <strong>Destino:</strong> {{ pacote.destination }}
+      </p>
+      <p class="preco">{{ formatPrice(pacote.price) }}</p>
 
       <ng-template pTemplate="footer">
         <p-button 
@@ -41,6 +49,21 @@ export class CardsComponent {
 
   constructor(private router: Router) {}
   
+  /** Formata o preço do pedido lidando com valores string/number. */
+  formatPrice(value: number | string | null | undefined): string {
+    if (value === null || value === undefined) {
+      return '—';
+    }
+
+    const numeric = typeof value === 'string' ? Number(value) : value;
+
+    if (Number.isNaN(numeric)) {
+      return '—';
+    }
+
+    return numeric.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
   onVerDetalhes() {
     this.router.navigate(['/rastreio', this.pacote.trackingCode]);
   }

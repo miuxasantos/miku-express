@@ -9,10 +9,11 @@ export interface LoginRequest {
 
 export interface LoginResponse {
     token: string;
+    tokenType: string;
     email: string;
     name: string;
     role: string;
-    id: number;
+    userId: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -24,18 +25,20 @@ export class AuthService {
     }
 
     login(data: LoginRequest): Observable<LoginResponse> {
-        return this.apiService.post<LoginResponse>('/login', data).pipe(
+        return this.apiService.post<LoginResponse>('/auth/login', data).pipe(
             tap((response: LoginResponse) => {
-                localStorage.setItem('auth_token', response.token);
+                localStorage.setItem('token', response.token);
+                localStorage.setItem('token_type', response.tokenType);
+                localStorage.setItem('auth_token', response.token); // compatibilidade
                 localStorage.setItem('user_email', response.email);
                 localStorage.setItem('user_name', response.name);
                 localStorage.setItem('user_role', response.role);
-                localStorage.setItem('user_id', response.id.toString());
+                localStorage.setItem('user_id', response.userId.toString());
         }))
     }
 
     getToken(): string | null {
-        return localStorage.getItem('auth_token');
+        return localStorage.getItem('token') ?? localStorage.getItem('auth_token');
     }
 
     getUser(): { id: number; name: string; email: string; role: string } | null {
@@ -58,5 +61,7 @@ export class AuthService {
         localStorage.removeItem('user_name');
         localStorage.removeItem('user_role');
         localStorage.removeItem('user_id');
+        localStorage.removeItem('token');
+        localStorage.removeItem('token_type');
     }
 }

@@ -1,0 +1,228 @@
+<div class="account-page" *ngIf="!loading; else loadingState">
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <section class="header">
+    <div>
+      <h1>Minha Conta</h1>
+      <p>Consulte e atualize suas informações pessoais sempre que precisar.</p>
+    </div>
+    <div class="header__actions">
+      <button
+        pButton
+        label="Encerrar sessão"
+        icon="pi pi-sign-out"
+        class="p-button-text"
+        (click)="logout()"
+      ></button>
+
+      <button
+        pButton
+        label="Excluir conta"
+        icon="pi pi-trash"
+        class="p-button-danger"
+        (click)="deleteAccount()"
+      ></button>
+    </div>
+  </section>
+
+  <section class="summary" *ngIf="account">
+    <p-card>
+      <div class="summary__grid">
+        <div>
+          <span class="summary__title">Status do acesso</span>
+          <h2>{{ account.name }}</h2>
+          <p class="summary__role">
+            Papel atual:
+            <strong>{{ account.role === 'ADMIN' ? 'Administrador' : 'Cliente' }}</strong>
+          </p>
+        </div>
+        <div>
+          <span class="summary__title">Contato principal</span>
+          <p>{{ account.email }}</p>
+          <p>{{ formatPhone(account.phoneNumber) }}</p>
+        </div>
+        <div>
+          <span class="summary__title">Identificação</span>
+          <p>CPF: {{ formatCpf(account.cpf) }}</p>
+          <p>Data de nascimento: {{ account.dateOfBirth | date:'dd/MM/yyyy' }}</p>
+        </div>
+      </div>
+    </p-card>
+  </section>
+
+  <p-divider></p-divider>
+
+  <section class="fields">
+    <div class="field-card" *ngIf="account">
+      <p-card>
+        <div class="field-card__header">
+          <h3>Nome completo</h3>
+          <span>Usado em notificações e e-mails.</span>
+        </div>
+        <div class="field-card__content">
+          <input
+            type="text"
+            pInputText
+            [(ngModel)]="formState.name"
+            placeholder="Digite seu nome"
+          />
+        </div>
+        <div class="field-card__actions">
+          <button pButton label="Restaurar" class="p-button-text" (click)="resetField('name')"></button>
+          <button
+            pButton
+            label="Salvar"
+            icon="pi pi-save"
+            [loading]="isUpdating.name"
+            (click)="updateField('name')"
+          ></button>
+        </div>
+      </p-card>
+    </div>
+
+    <div class="field-card" *ngIf="account">
+      <p-card>
+        <div class="field-card__header">
+          <h3>E-mail</h3>
+          <span>Usado para login e notificações.</span>
+        </div>
+        <div class="field-card__content">
+          <input
+            type="email"
+            pInputText
+            [(ngModel)]="formState.email"
+            placeholder="nome@mikuexpress.com"
+          />
+        </div>
+        <div class="field-card__actions">
+          <button pButton label="Restaurar" class="p-button-text" (click)="resetField('email')"></button>
+          <button
+            pButton
+            label="Salvar"
+            icon="pi pi-save"
+            [loading]="isUpdating.email"
+            (click)="updateField('email')"
+          ></button>
+        </div>
+      </p-card>
+    </div>
+
+    <div class="field-card" *ngIf="account">
+      <p-card>
+        <div class="field-card__header">
+          <h3>Telefone</h3>
+          <span>Utilizado para contato com a equipe de suporte.</span>
+        </div>
+        <div class="field-card__content">
+          <input
+            type="tel"
+            pInputText
+            [(ngModel)]="formState.phoneNumber"
+            placeholder="11999999999"
+          />
+        </div>
+        <div class="field-card__actions">
+          <button pButton label="Restaurar" class="p-button-text" (click)="resetField('phoneNumber')"></button>
+          <button
+            pButton
+            label="Salvar"
+            icon="pi pi-save"
+            [loading]="isUpdating.phoneNumber"
+            (click)="updateField('phoneNumber')"
+          ></button>
+        </div>
+      </p-card>
+    </div>
+
+    <div class="field-card" *ngIf="account">
+      <p-card>
+        <div class="field-card__header">
+          <h3>CPF</h3>
+          <span>Utilizado na emissão das notas fiscais.</span>
+        </div>
+        <div class="field-card__content">
+          <input
+            type="text"
+            pInputText
+            maxlength="14"
+            [(ngModel)]="formState.cpf"
+            placeholder="00000000000"
+          />
+        </div>
+        <div class="field-card__actions">
+          <button pButton label="Restaurar" class="p-button-text" (click)="resetField('cpf')"></button>
+          <button
+            pButton
+            label="Salvar"
+            icon="pi pi-save"
+            [loading]="isUpdating.cpf"
+            (click)="updateField('cpf')"
+          ></button>
+        </div>
+      </p-card>
+    </div>
+
+    <div class="field-card" *ngIf="account">
+      <p-card>
+        <div class="field-card__header">
+          <h3>Data de nascimento</h3>
+          <span>Ajuda a personalizar sua experiência.</span>
+        </div>
+        <div class="field-card__content">
+          <input
+            type="date"
+            pInputText
+            [(ngModel)]="formState.dateOfBirth"
+          />
+        </div>
+        <div class="field-card__actions">
+          <button pButton label="Restaurar" class="p-button-text" (click)="resetField('dateOfBirth')"></button>
+          <button
+            pButton
+            label="Salvar"
+            icon="pi pi-save"
+            [loading]="isUpdating.dateOfBirth"
+            (click)="updateField('dateOfBirth')"
+          ></button>
+        </div>
+      </p-card>
+    </div>
+
+    <div class="field-card" *ngIf="account">
+      <p-card>
+        <div class="field-card__header">
+          <h3>Gênero</h3>
+          <span>Informação opcional para personalização.</span>
+        </div>
+        <div class="field-card__content">
+          <select
+            class="p-inputtext"
+            [(ngModel)]="formState.gender"
+          >
+            <option *ngFor="let option of genderOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+        </div>
+        <div class="field-card__actions">
+          <button pButton label="Restaurar" class="p-button-text" (click)="resetField('gender')"></button>
+          <button
+            pButton
+            label="Salvar"
+            icon="pi pi-save"
+            [loading]="isUpdating.gender"
+            (click)="updateField('gender')"
+          ></button>
+        </div>
+      </p-card>
+    </div>
+  </section>
+</div>
+
+<ng-template #loadingState>
+  <div class="loading-state">
+    <p>Carregando suas informações...</p>
+  </div>
+</ng-template>
+

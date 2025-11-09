@@ -1,1 +1,233 @@
-<p>signup works!</p>
+<div class="signup-page">
+  <p-toast></p-toast>
+
+  <section class="hero">
+    <div class="hero__text">
+      <h1>Crie sua conta na Miku Express</h1>
+      <p>
+        Cadastre-se para acessar o painel, criar pedidos personalizados e acompanhar tudo em sincronia com nossa logística
+        vocaloid.
+      </p>
+      <div class="hero__tags">
+        <p-tag value="Cadastro gratuito" severity="success"></p-tag>
+        <p-tag value="Pacotes ilimitados" severity="info"></p-tag>
+        <p-tag value="Atualizações em tempo real" severity="primary"></p-tag>
+      </div>
+    </div>
+
+    <p-card class="hero__card">
+      <strong>Vantagens para clientes Miku</strong>
+      <ul>
+        <li>Rastreio detalhado com notificações automáticas</li>
+        <li>Histórico completo dos seus envios</li>
+        <li>Suporte dedicado com especialistas em logística</li>
+      </ul>
+    </p-card>
+  </section>
+
+  <section class="content">
+    <p-card class="form-card">
+      <ng-template pTemplate="header">
+        <h2>Dados do cadastro</h2>
+        <span>Preencha as informações para liberar o seu painel.</span>
+      </ng-template>
+
+      <form #signupForm="ngForm" (ngSubmit)="register(signupForm)" novalidate>
+        <div class="grid-two">
+          <div class="input-group" [class.invalid]="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched || signupForm.submitted)">
+            <label for="name">Nome completo *</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              pInputText
+              required
+              placeholder="Como você quer ser chamado?"
+              autocomplete="name"
+              [(ngModel)]="formData.name"
+              #nameCtrl="ngModel"
+            />
+            <small *ngIf="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched || signupForm.submitted)">
+              Informe seu nome completo.
+            </small>
+          </div>
+
+          <div class="input-group" [class.invalid]="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched || signupForm.submitted)">
+            <label for="email">E-mail corporativo *</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              pInputText
+              required
+              placeholder="nome@empresa.com"
+              autocomplete="email"
+              [(ngModel)]="formData.email"
+              #emailCtrl="ngModel"
+            />
+            <small *ngIf="emailCtrl.errors?.['required'] && (emailCtrl.dirty || emailCtrl.touched || signupForm.submitted)">
+              Informe um e-mail válido.
+            </small>
+            <small *ngIf="emailCtrl.errors?.['email'] && (emailCtrl.dirty || emailCtrl.touched || signupForm.submitted)">
+              Use um e-mail com formato válido.
+            </small>
+          </div>
+        </div>
+
+        <div class="grid-two">
+          <div class="input-group" [class.invalid]="phoneCtrl.invalid && (phoneCtrl.dirty || phoneCtrl.touched || signupForm.submitted)">
+            <label for="phoneNumber">Telefone *</label>
+            <input
+              id="phoneNumber"
+              name="phoneNumber"
+              type="tel"
+              pInputText
+              required
+              placeholder="(11) 98888-7777"
+              autocomplete="tel"
+              [(ngModel)]="formData.phoneNumber"
+              #phoneCtrl="ngModel"
+            />
+            <small *ngIf="phoneCtrl.errors?.['required'] && (phoneCtrl.dirty || phoneCtrl.touched || signupForm.submitted)">
+              Informe um telefone para contato.
+            </small>
+            <small class="hint">Você pode digitar somente os números; formatamos para você.</small>
+          </div>
+
+          <div class="input-group" [class.invalid]="cpfCtrl.invalid && (cpfCtrl.dirty || cpfCtrl.touched || signupForm.submitted)">
+            <label for="cpf">CPF *</label>
+            <input
+              id="cpf"
+              name="cpf"
+              type="text"
+              pInputText
+              required
+              placeholder="000.000.000-00"
+              autocomplete="off"
+              [(ngModel)]="formData.cpf"
+              #cpfCtrl="ngModel"
+            />
+            <small *ngIf="cpfCtrl.errors?.['required'] && (cpfCtrl.dirty || cpfCtrl.touched || signupForm.submitted)">
+              Informe o CPF do titular.
+            </small>
+            <small class="hint">Digite apenas os números; aplicamos o formato automaticamente.</small>
+          </div>
+        </div>
+
+        <div class="grid-two">
+          <div class="input-group" [class.invalid]="birthCtrl.invalid && (birthCtrl.dirty || birthCtrl.touched || signupForm.submitted)">
+            <label for="dateOfBirth">Data de nascimento *</label>
+            <input
+              id="dateOfBirth"
+              name="dateOfBirth"
+              type="date"
+              pInputText
+              required
+              [max]="maxDate"
+              [(ngModel)]="formData.dateOfBirth"
+              #birthCtrl="ngModel"
+            />
+            <small *ngIf="birthCtrl.invalid && (birthCtrl.dirty || birthCtrl.touched || signupForm.submitted)">
+              Informe uma data válida.
+            </small>
+          </div>
+
+          <div class="input-group">
+            <label for="gender">Gênero *</label>
+            <select
+              id="gender"
+              name="gender"
+              [(ngModel)]="formData.gender"
+            >
+              <option *ngFor="let option of genders" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-two">
+          <div class="input-group" [class.invalid]="passwordCtrl.invalid && (passwordCtrl.dirty || passwordCtrl.touched || signupForm.submitted)">
+            <label for="password">Senha *</label>
+            <p-password
+              id="password"
+              name="password"
+              required
+              [(ngModel)]="formData.password"
+              #passwordCtrl="ngModel"
+              [feedback]="true"
+              promptLabel="Minha senha segura"
+              weakLabel="Fraca"
+              mediumLabel="Boa"
+              strongLabel="Excelente"
+              placeholder="Crie uma senha segura"
+              [inputStyle]="{ 'font-size': '1rem' }"
+            ></p-password>
+            <small *ngIf="passwordCtrl.invalid && (passwordCtrl.dirty || passwordCtrl.touched || signupForm.submitted)">
+              Crie uma senha para acessar o painel.
+            </small>
+          </div>
+
+          <div class="input-group">
+            <label>&nbsp;</label>
+            <p-card class="summary-card">
+              <strong>Requisitos recomendados</strong>
+              <ul>
+                <li>8+ caracteres</li>
+                <li>Uma letra maiúscula</li>
+                <li>Números e caracteres especiais</li>
+              </ul>
+            </p-card>
+          </div>
+        </div>
+
+        <div class="terms">
+          <p-checkbox
+            name="terms"
+            [(ngModel)]="acceptedTerms"
+            binary="true"
+            inputId="terms"
+          ></p-checkbox>
+          <label for="terms">
+            Confirmo que li e aceito os termos de uso e política de privacidade da Miku Express.
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="submit"
+            pButton
+            label="Criar conta"
+            icon="pi pi-user-plus"
+            class="submit-button"
+            [loading]="isSubmitting"
+            [disabled]="isSubmitting"
+          ></button>
+        </div>
+      </form>
+
+      <p-divider align="center">
+        <span>Já tenho conta</span>
+      </p-divider>
+
+      <div class="links">
+        <span>Fazer login com minhas credenciais.</span>
+        <a routerLink="/signin">Ir para o login</a>
+      </div>
+    </p-card>
+
+    <aside class="insights">
+      <p-card>
+        <h3>Dados fictícios para testes</h3>
+        <p>
+          Não tem um CPF corporativo à mão? Teste com <strong>000.111.222-33</strong> e telefone
+          <strong>(11) 91234-5678</strong>. Você pode ajustar depois no painel.
+        </p>
+        <p>
+          Nossa equipe está pronta para adaptar a plataforma para diferentes segmentos logísticos e fluxos
+          operacionais.
+        </p>
+      </p-card>
+    </aside>
+  </section>
+</div>

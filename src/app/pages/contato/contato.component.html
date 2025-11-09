@@ -1,1 +1,219 @@
-<p>contato works!</p>
+<div class="contato-page">
+  <p-toast></p-toast>
+
+  <section class="hero">
+    <div class="hero__content">
+      <h1>Fale com a Miku Express</h1>
+      <p>
+        Estamos prontos para acompanhar cada passo da sua logística. Nosso time especializado oferece suporte
+        humanizado, respostas rápidas e soluções personalizadas para o seu negócio.
+      </p>
+
+      <div class="hero__tags">
+        <p-tag value="Suporte Humanizado" severity="success"></p-tag>
+        <p-tag value="Operação 24/7" severity="info"></p-tag>
+        <p-tag value="Cobertura Nacional" severity="primary"></p-tag>
+      </div>
+    </div>
+
+    <p-card class="hero__card" header="{{ officeInfo.name }}" subheader="Base de atendimento principal">
+      <div class="hero__card-content">
+        <div class="info-row">
+          <i class="pi pi-map-marker"></i>
+          <div>
+            <strong>Endereço</strong>
+            <p>
+              {{ officeInfo.address }} - {{ officeInfo.district }}<br>
+              {{ officeInfo.city }} · CEP {{ officeInfo.zipCode }}
+            </p>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <i class="pi pi-phone"></i>
+          <div>
+            <strong>Central Telefônica</strong>
+            <p>{{ officeInfo.phone }}</p>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <i class="pi pi-clock"></i>
+          <div>
+            <strong>Horário de Atendimento</strong>
+            <p>{{ officeInfo.supportHours }}<br>{{ officeInfo.supportHoursWeekend }}</p>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <i class="pi pi-envelope"></i>
+          <div>
+            <strong>E-mail oficial</strong>
+            <p>{{ officeInfo.email }}</p>
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </section>
+
+  <section class="content-grid">
+    <p-card class="form-card">
+      <ng-template pTemplate="header">
+        <h2>Envie uma mensagem</h2>
+        <span>Responderemos em até 24 horas úteis</span>
+      </ng-template>
+
+      <form #contactForm="ngForm" (ngSubmit)="enviarMensagem(contactForm)" novalidate>
+        <div class="form-row">
+          <div class="input-group" [class.invalid]="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched || contactForm.submitted)">
+            <label for="name">Nome completo *</label>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              pInputText
+              required
+              autocomplete="name"
+              [(ngModel)]="formData.name"
+              #nameCtrl="ngModel"
+              placeholder="Como podemos te chamar?"
+            />
+            <small *ngIf="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched || contactForm.submitted)">
+              Informe seu nome completo.
+            </small>
+          </div>
+
+          <div class="input-group" [class.invalid]="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched || contactForm.submitted)">
+            <label for="email">E-mail *</label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              pInputText
+              required
+              email
+              autocomplete="email"
+              [(ngModel)]="formData.email"
+              #emailCtrl="ngModel"
+              placeholder="nome@empresa.com"
+            />
+            <small *ngIf="emailCtrl.errors?.['required'] && (emailCtrl.dirty || emailCtrl.touched || contactForm.submitted)">
+              Informe um e-mail para contato.
+            </small>
+            <small *ngIf="emailCtrl.errors?.['email'] && (emailCtrl.dirty || emailCtrl.touched || contactForm.submitted)">
+              Digite um e-mail válido.
+            </small>
+          </div>
+        </div>
+
+        <div class="input-group" [class.invalid]="subjectCtrl.invalid && (subjectCtrl.dirty || subjectCtrl.touched || contactForm.submitted)">
+          <label for="subject">Assunto *</label>
+          <input
+            id="subject"
+            type="text"
+            name="subject"
+            pInputText
+            required
+            [(ngModel)]="formData.subject"
+            #subjectCtrl="ngModel"
+            placeholder="Ex: Cotação para entregas semanais"
+          />
+          <small *ngIf="subjectCtrl.invalid && (subjectCtrl.dirty || subjectCtrl.touched || contactForm.submitted)">
+            Conte-nos sobre o motivo do contato.
+          </small>
+        </div>
+
+        <div class="input-group" [class.invalid]="messageCtrl.invalid && (messageCtrl.dirty || messageCtrl.touched || contactForm.submitted)">
+          <label for="message">Mensagem *</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="6"
+            pInputTextarea
+            required
+            [(ngModel)]="formData.message"
+            #messageCtrl="ngModel"
+            placeholder="Compartilhe os detalhes que precisamos saber para ajudar você."
+          ></textarea>
+          <small *ngIf="messageCtrl.invalid && (messageCtrl.dirty || messageCtrl.touched || contactForm.submitted)">
+            Descreva sua necessidade para que possamos ajudar.
+          </small>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="submit"
+            pButton
+            class="submit-button"
+            label="Enviar mensagem"
+            icon="pi pi-send"
+            [loading]="isSubmitting"
+            [disabled]="isSubmitting"
+          ></button>
+        </div>
+      </form>
+    </p-card>
+
+    <div class="info-column">
+      <p-card class="channel-card" *ngFor="let channel of supportChannels">
+        <div class="channel-header">
+          <i class="pi" [ngClass]="channel.icon"></i>
+          <div>
+            <h3>{{ channel.title }}</h3>
+            <p>{{ channel.description }}</p>
+          </div>
+        </div>
+
+        <div class="channel-body">
+          <span>{{ channel.value }}</span>
+          <p-tag *ngIf="channel.action" severity="secondary" [value]="channel.action"></p-tag>
+        </div>
+      </p-card>
+
+      <p-card class="social-card">
+        <h3>Redes Oficiais</h3>
+        <p>
+          Acompanhe bastidores, novidades e as próximas parcerias musicais da nossa operação logística.
+        </p>
+        <div class="social-list">
+          <a *ngFor="let social of socialLinks" [href]="social.url" target="_blank" rel="noopener">
+            <i class="pi" [ngClass]="social.icon"></i>
+            <span>{{ social.label }}</span>
+          </a>
+        </div>
+      </p-card>
+    </div>
+  </section>
+
+  <p-divider></p-divider>
+
+  <section class="map-section">
+    <div class="map-section__content">
+      <div class="map-section__text">
+        <h2>Venha nos visitar</h2>
+        <p>
+          Nossa base está localizada no coração tecnológico de Tóquio, conectada diretamente às principais rotas
+          logísticas e com hubs parceiros em mais de 120 cidades brasileiras.
+        </p>
+        <ul>
+          <li>Hubs estratégicos em São Paulo, Rio de Janeiro, Curitiba e Recife</li>
+          <li>Área de triagem automatizada com capacidade para 50 mil pacotes/dia</li>
+          <li>Centro de treinamento Vocaloid Logistics Academy para nossos especialistas</li>
+        </ul>
+      </div>
+
+      <div class="map-section__map">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.7853502874914!2d139.698382!3d35.656659!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188cb2408f7211%3A0x3a3d60bb75e5a73f!2sShibuya%20City%2C%20Tokyo%2C%20Jap%C3%A3o!5e0!3m2!1spt-BR!2sbr!4v1712719440000!5m2!1spt-BR!2sbr"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Mapa Miku Express"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+</div>
