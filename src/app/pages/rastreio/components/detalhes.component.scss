@@ -1,17 +1,22 @@
 .detalhes-container {
   padding: 2rem;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .detalhes-card {
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
+  background: #0075FF;
+  background: linear-gradient(90deg,rgba(0, 117, 255, 1) 0%, rgba(123, 204, 255, 1) 100%);
 }
 
 .voltar-button {
   margin-bottom: 1.5rem;
+}
+
+.p-button-secondary {
+  border-style: none;
 }
 
 .info-header {

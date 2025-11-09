@@ -83,6 +83,7 @@
               type="tel"
               pInputText
               required
+              appPhoneMask
               placeholder="(11) 98888-7777"
               autocomplete="tel"
               [(ngModel)]="formData.phoneNumber"
@@ -101,6 +102,7 @@
               name="cpf"
               type="text"
               pInputText
+              appCpfMask
               required
               placeholder="000.000.000-00"
               autocomplete="off"
@@ -215,19 +217,5 @@
         <a routerLink="/signin">Ir para o login</a>
       </div>
     </p-card>
-
-    <aside class="insights">
-      <p-card>
-        <h3>Dados fictícios para testes</h3>
-        <p>
-          Não tem um CPF corporativo à mão? Teste com <strong>000.111.222-33</strong> e telefone
-          <strong>(11) 91234-5678</strong>. Você pode ajustar depois no painel.
-        </p>
-        <p>
-          Nossa equipe está pronta para adaptar a plataforma para diferentes segmentos logísticos e fluxos
-          operacionais.
-        </p>
-      </p-card>
-    </aside>
   </section>
 </div>

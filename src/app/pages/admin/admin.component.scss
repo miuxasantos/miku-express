@@ -1,13 +1,10 @@
 .admin-page {
   min-height: 100vh;
-  padding: 3rem clamp(1.5rem, 5vw, 5.5rem);
+  padding: 1rem clamp(1.5rem, 5vw, 5.5rem);
   display: flex;
   flex-direction: column;
   gap: clamp(2rem, 4vw, 3rem);
-  background:
-    radial-gradient(circle at 10% 20%, rgba(63, 81, 181, 0.12) 0%, transparent 55%),
-    radial-gradient(circle at 90% 10%, rgba(236, 64, 122, 0.12) 0%, transparent 50%),
-    linear-gradient(180deg, #f9fbff 0%, #f1f5ff 100%);
+  background: #f5f8ff;
 }
 
 .page-header {
@@ -46,6 +43,11 @@
   }
 }
 
+.miku2 {
+  border-radius: 20px;
+  width: 200px;
+  margin-top: 16px;
+}
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

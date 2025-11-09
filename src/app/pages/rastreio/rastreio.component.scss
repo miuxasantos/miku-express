@@ -1,7 +1,16 @@
 .rastreio-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
+}
+
+.mikutracking {
+  margin-top: 150px;
+  margin-left: 10px;
+  display: block;
+  max-width: 200px;
+  width: 100%;
+  border-radius: 20px;
+  position: fixed;
 }
 
 .loading-overlay {

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { Order, StatusUpdate } from '../../models/client';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 /**
  * Cartão resumido para exibição de pedidos em "Meus Pacotes".
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
  */
 @Component({
   selector: 'app-cards',
-  imports: [CardModule, ButtonModule, CommonModule],
+  imports: [CardModule, ButtonModule, CommonModule, RouterModule],
   template: `
   <div>
   <p-card 
@@ -36,7 +36,7 @@ import { Router } from '@angular/router';
           label="Ver Detalhes" 
           icon="pi pi-eye"
           (onClick)="onVerDetalhes()"
-        >Ver detalhes</p-button>
+        ></p-button>
       </ng-template>
     </p-card>
 </div>
@@ -65,6 +65,8 @@ export class CardsComponent {
   }
 
   onVerDetalhes() {
-    this.router.navigate(['/rastreio', this.pacote.trackingCode]);
+    this.router.navigate(['/rastreio'], {
+      queryParams: { code: this.pacote.trackingCode }
+    });
   }
 }

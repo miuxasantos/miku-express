@@ -15,6 +15,8 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { CepMaskDirective } from '../../core/mask/cepMask.directive';
+import { PhoneMaskDirective } from '../../core/mask/phoneMask.directive';
+import { CnpjMaskDirective } from '../../core/mask/cnpjMask.directive';
 
 interface DashboardStat {
   label: string;
@@ -46,7 +48,9 @@ interface DashboardStat {
     DividerModule,
     ToastModule,
     ConfirmDialogModule,
-    CepMaskDirective
+    CepMaskDirective,
+    PhoneMaskDirective,
+    CnpjMaskDirective
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './admin.component.html',
@@ -665,7 +669,7 @@ export class AdminComponent implements OnInit {
     this.orders.forEach(order => {
       const last = this.getLastStatus(order)?.status?.toLowerCase() ?? '';
 
-      if (last.includes('entreg')) {
+      if (last.includes('entregue')) {
         delivered += 1;
       } else if (last.includes('cancel')) {
         return;
@@ -694,7 +698,7 @@ export class AdminComponent implements OnInit {
         value: inTransit,
         icon: 'pi pi-truck',
         description: 'Pacotes em transporte ou processamento',
-        severity: 'warn'
+        severity: 'success'
       },
       {
         label: 'Receita estimada',

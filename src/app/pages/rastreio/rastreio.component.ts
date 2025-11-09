@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BuscaComponent } from './components/busca.component';
@@ -8,6 +8,7 @@ import { ClientService } from '../../services/client.service';
 import { Order } from '../../models/client';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-rastreio',
@@ -23,7 +24,8 @@ import { MessageService } from 'primeng/api';
   styleUrls: ['./rastreio.component.scss']
 })
 
-export class RastreioComponent {
+export class RastreioComponent implements OnInit {
+  trackingCodeInput?: string;
   orderEncontrado: boolean = false;
   orderSelecionado?: Order;
   loading: boolean = false;
@@ -31,8 +33,21 @@ export class RastreioComponent {
   constructor(
     private publicService: PublicService,
     private clientService: ClientService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const trackingCode = params['code'];
+      console.log('Query parameter code:', trackingCode);
+      
+      if (trackingCode) {
+        this.buscarOrder(trackingCode);
+      }
+    });
+  }
 
   buscarOrder(trackingCode: string) {
     this.loading = true;

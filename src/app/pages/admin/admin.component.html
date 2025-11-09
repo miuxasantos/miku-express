@@ -2,16 +2,19 @@
   <p-toast></p-toast>
   <p-confirmDialog></p-confirmDialog>
 
+
   <section class="page-header">
     <div>
       <h1>Painel administrativo</h1>
       <p>Monitore pedidos, atualize status e acompanhe a operação da Miku Express.</p>
+       <img class="miku2" src="assets/miku2.webp" />
     </div>
 
     <div class="page-header__actions">
       <button
         type="button"
         pButton
+        severity="info"
         label="Novo pedido"
         icon="pi pi-plus"
         (click)="openCreateDialog()"
@@ -20,6 +23,7 @@
         type="button"
         pButton
         label="Atualizar"
+        severity="info"
         icon="pi pi-refresh"
         class="p-button-outlined"
         [loading]="loading"
@@ -80,7 +84,7 @@
           <th>Peso</th>
           <th>Preço</th>
           <th>Status</th>
-          <th class="actions-column">Ações</th>
+          <th>Ações</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-order>
@@ -125,7 +129,7 @@
               Atualizado em {{ getLastStatus(order)?.dateUpdate | date:'dd/MM/yyyy HH:mm' }}
             </small>
           </td>
-          <td class="actions-column">
+          <td>
             <button
               type="button"
               pButton
@@ -379,7 +383,7 @@
       <div class="form-row">
         <div class="form-field">
           <label>Telefone</label>
-          <input type="text" pInputText formControlName="phoneNumber" placeholder="Telefone de contato" />
+          <input type="text" pInputText appPhoneMask formControlName="phoneNumber" placeholder="Telefone de contato" />
         </div>
         <div class="form-field">
           <label>Organização *</label>
@@ -392,13 +396,14 @@
 
       <div class="form-field">
         <label>CNPJ</label>
-        <input type="text" pInputText formControlName="cnpj" readonly />
+        <input type="text" appCnpjMask pInputText formControlName="cnpj" readonly />
       </div>
 
       <div class="dialog-actions">
         <button
           type="button"
           pButton
+          severity="danger"
           label="Cancelar"
           class="p-button-text"
           (click)="adminDialogVisible = false"
@@ -406,6 +411,7 @@
         <button
           type="submit"
           pButton
+          severity="info"
           label="Salvar alterações"
           icon="pi pi-check"
           [loading]="adminSaving"
@@ -473,6 +479,7 @@
             id="admin-phone"
             type="text"
             pInputText
+            appPhoneMask
             formControlName="phoneNumber"
             placeholder="11999999999"
           />
@@ -487,6 +494,7 @@
             id="admin-cnpj"
             type="text"
             pInputText
+            appCnpjMask
             formControlName="cnpj"
             placeholder="00.000.000/0000-00"
           />
@@ -514,6 +522,7 @@
         <button
           type="button"
           pButton
+          severity="danger"
           label="Cancelar"
           class="p-button-text"
           (click)="createAdminDialogVisible = false"
@@ -521,6 +530,7 @@
         <button
           type="submit"
           pButton
+          severity="info"
           label="Criar administrador"
           icon="pi pi-save"
           [loading]="creatingAdminUser"
@@ -583,6 +593,7 @@
         <button
           type="button"
           pButton
+          severity="danger"
           label="Cancelar"
           class="p-button-text"
           (click)="statusDialogVisible = false"
@@ -590,6 +601,7 @@
         <button
           type="submit"
           pButton
+          severity="info"
           label="Salvar status"
           icon="pi pi-check"
           [loading]="savingStatus"
@@ -686,6 +698,7 @@
         <button
           type="button"
           pButton
+          severity="danger"
           label="Cancelar"
           class="p-button-text"
           (click)="createDialogVisible = false"
@@ -693,6 +706,7 @@
         <button
           type="submit"
           pButton
+          severity="info"
           label="Criar pedido"
           icon="pi pi-save"
           [loading]="creatingPackage"

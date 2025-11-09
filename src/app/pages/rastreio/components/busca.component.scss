@@ -9,6 +9,10 @@
 .busca-card {
   width: 100%;
   max-width: 500px;
+  text-align: center;
+  background: #0075FF;
+  color: white;
+  background: linear-gradient(90deg,rgba(0, 117, 255, 1) 0%, rgba(123, 204, 255, 1) 100%);
 }
 
 .busca-form {
@@ -17,6 +21,11 @@
   gap: 1.5rem;
 }
 
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 .busca-button {
   margin-top: 1rem;
 }

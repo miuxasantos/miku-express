@@ -10,8 +10,11 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
   imports: [CardsComponent, ScrollPanelModule, CommonModule],
   template: `
     <div class="page-container">
-      <h1>Meus Pacotes</h1>
+      <h1 class="page-title">Meus Pacotes</h1>
       
+      <div>
+        <img class="mikutracking" src="assets/trackingmiku.webp" />
+      </div>
       <div class="cards-container-wrapper">
         <p-scrollPanel 
           [style]="{ width: '100%', height: '80vh' }"

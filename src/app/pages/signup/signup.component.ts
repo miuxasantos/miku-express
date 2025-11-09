@@ -13,6 +13,8 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { TagModule } from 'primeng/tag';
 import { CheckboxModule } from 'primeng/checkbox';
+import { CpfMaskDirective } from '../../core/mask/cpfMask.directive';
+import { PhoneMaskDirective } from '../../core/mask/phoneMask.directive';
 
 interface GenderOption {
   label: string;
@@ -33,7 +35,9 @@ interface GenderOption {
     DividerModule,
     ToastModule,
     TagModule,
-    CheckboxModule
+    CheckboxModule,
+    CpfMaskDirective,
+    PhoneMaskDirective
   ],
   providers: [MessageService],
   templateUrl: './signup.component.html',

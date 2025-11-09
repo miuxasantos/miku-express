@@ -57,7 +57,6 @@
         <ng-template pTemplate="content" let-update>
           <p-card 
             [header]="getStatusText(update.status)" 
-            [subheader]="update.source + ' → ' + update.destination"
             class="timeline-card"
           >
             <p class="update-description">{{ getStatusDescription(update.status) }}</p>
