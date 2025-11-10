@@ -47,10 +47,10 @@ export class PacotesComponent implements OnInit {
 
     const token = localStorage.getItem('token');
     if (!token) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/signin']);
       return;
     }
-    
+
     this.clientService.getOrders().subscribe({
       next: (data) => {
         this.orders = data;
