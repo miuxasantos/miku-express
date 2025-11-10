@@ -46,8 +46,8 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./pages/notfound/notfound.component.routes').then(m => m.NOTFOUND_ROUTES)
   },
-  // {
-  //   path: '**',
-  //   redirectTo: ''
-  // }
+  {
+    path: '**',
+    redirectTo: '/notfound'
+  }
 ];

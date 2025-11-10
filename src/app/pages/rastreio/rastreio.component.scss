@@ -1,16 +1,22 @@
 .rastreio-page {
-  min-height: 100vh;
-  position: relative;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 2rem;
 }
 
 .mikutracking {
-  margin-top: 150px;
   margin-left: 10px;
-  display: block;
-  max-width: 200px;
-  width: 100%;
+  max-width: 300px;
+  width: 300px;
   border-radius: 20px;
-  position: fixed;
+}
+
+.busca {
+  width: 800px;
+  margin: 0;
 }
 
 .loading-overlay {

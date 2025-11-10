@@ -4,6 +4,7 @@ import { ClientService } from '../../services/client.service';
 import { Order, StatusUpdate } from '../../models/client';
 import { CommonModule } from '@angular/common';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pacotes',
@@ -36,13 +37,20 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 export class PacotesComponent implements OnInit {
   orders: Order[] = [];
 
-  constructor(private clientService: ClientService) {}
+  constructor(private clientService: ClientService, private router: Router) {}
 
   ngOnInit() {
     this.carregarPacotes();
   }
 
   carregarPacotes() {
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    
     this.clientService.getOrders().subscribe({
       next: (data) => {
         this.orders = data;

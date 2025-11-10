@@ -3,17 +3,11 @@
 
   <section class="hero">
     <div class="hero__content">
-      <h1>Fale com a Miku Express</h1>
+      <h1>Teve algum problema?</h1>
       <p>
-        Estamos prontos para acompanhar cada passo da sua logística. Nosso time especializado oferece suporte
-        humanizado, respostas rápidas e soluções personalizadas para o seu negócio.
+        Fique à vontade para cantar com os nossos atendentes e resolvermos qualquer dúvida ou problema!
       </p>
-
-      <div class="hero__tags">
-        <p-tag value="Suporte Humanizado" severity="success"></p-tag>
-        <p-tag value="Operação 24/7" severity="info"></p-tag>
-        <p-tag value="Cobertura Nacional" severity="primary"></p-tag>
-      </div>
+      <img class="hero__img" src="assets/miku2.webp" />
     </div>
 
     <p-card class="hero__card" header="{{ officeInfo.name }}" subheader="Base de atendimento principal">
@@ -155,21 +149,6 @@
     </p-card>
 
     <div class="info-column">
-      <p-card class="channel-card" *ngFor="let channel of supportChannels">
-        <div class="channel-header">
-          <i class="pi" [ngClass]="channel.icon"></i>
-          <div>
-            <h3>{{ channel.title }}</h3>
-            <p>{{ channel.description }}</p>
-          </div>
-        </div>
-
-        <div class="channel-body">
-          <span>{{ channel.value }}</span>
-          <p-tag *ngIf="channel.action" severity="secondary" [value]="channel.action"></p-tag>
-        </div>
-      </p-card>
-
       <p-card class="social-card">
         <h3>Redes Oficiais</h3>
         <p>
@@ -186,34 +165,4 @@
   </section>
 
   <p-divider></p-divider>
-
-  <section class="map-section">
-    <div class="map-section__content">
-      <div class="map-section__text">
-        <h2>Venha nos visitar</h2>
-        <p>
-          Nossa base está localizada no coração tecnológico de Tóquio, conectada diretamente às principais rotas
-          logísticas e com hubs parceiros em mais de 120 cidades brasileiras.
-        </p>
-        <ul>
-          <li>Hubs estratégicos em São Paulo, Rio de Janeiro, Curitiba e Recife</li>
-          <li>Área de triagem automatizada com capacidade para 50 mil pacotes/dia</li>
-          <li>Centro de treinamento Vocaloid Logistics Academy para nossos especialistas</li>
-        </ul>
-      </div>
-
-      <div class="map-section__map">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.7853502874914!2d139.698382!3d35.656659!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188cb2408f7211%3A0x3a3d60bb75e5a73f!2sShibuya%20City%2C%20Tokyo%2C%20Jap%C3%A3o!5e0!3m2!1spt-BR!2sbr!4v1712719440000!5m2!1spt-BR!2sbr"
-          width="100%"
-          height="100%"
-          style="border:0;"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          title="Mapa Miku Express"
-        ></iframe>
-      </div>
-    </div>
-  </section>
 </div>

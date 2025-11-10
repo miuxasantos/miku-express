@@ -1,10 +1,8 @@
 <p-toast></p-toast>
 
-<img class="mikutracking" src="assets/trackingmiku.webp" />
-
 <div class="rastreio-page">
   <!-- Tela de Busca -->
-  <app-busca
+  <app-busca class="busca"
     *ngIf="!orderEncontrado"
     (buscarPacote)="buscarOrder($event)"
   ></app-busca>
@@ -15,6 +13,8 @@
     [order]="orderSelecionado!"
     (voltar)="voltarParaBusca()"
   ></app-detalhes>
+
+  <img class="mikutracking" src="assets/trackingmiku.webp" />
 
   <!-- Loading Global -->
   <div *ngIf="loading" class="loading-overlay">

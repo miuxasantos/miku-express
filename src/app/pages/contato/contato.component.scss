@@ -38,6 +38,12 @@
     }
   }
 
+  .hero__img {
+    width: 300px;
+    border-radius: 20px;
+    align-self: center;
+  }
+
   &__tags {
     display: flex;
     flex-wrap: wrap;

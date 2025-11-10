@@ -52,28 +52,6 @@ export class ContatoComponent {
     supportHoursWeekend: 'Sábados | 09h00 às 13h00'
   };
 
-  supportChannels: SupportChannel[] = [
-    {
-      icon: 'pi pi-envelope',
-      title: 'Suporte Geral',
-      description: 'Questões sobre entregas, cotações e agendamentos.',
-      value: 'suporte@mikuexpress.com'
-    },
-    {
-      icon: 'pi pi-briefcase',
-      title: 'Atendimento Empresarial',
-      description: 'Projetos logísticos personalizados para sua empresa.',
-      value: 'corporativo@mikuexpress.com'
-    },
-    {
-      icon: 'pi pi-headset',
-      title: 'Canal WhatsMiku',
-      description: 'Equipe online em tempo real para dúvidas urgentes.',
-      value: '+55 (11) 98888-7777',
-      action: 'Atendimento 24/7'
-    }
-  ];
-
   socialLinks = [
     { icon: 'pi pi-instagram', label: '@mikuexpress', url: '#' },
     { icon: 'pi pi-facebook', label: '/mikuexpress', url: '#' },
